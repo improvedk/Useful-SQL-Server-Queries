@@ -1,7 +1,7 @@
 Useful-SQL-Server-Queries
 =========================
 
-These are a collection of queries that I use when dealing with SQL Server, whether I'm looking to improve performance, diagnose IO issues or setup the server.
+This is a collection of queries that I use when dealing with SQL Server, whether I'm looking to improve performance, diagnose IO issues or setup the server.
 
 Some scripts are made by me, some are made by others, and finally some are made by others but modified by me. Any script not made by me will contain proper attribution in the header.
 
