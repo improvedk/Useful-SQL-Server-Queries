@@ -11,18 +11,19 @@
  ********************************************************************************/
  
 SELECT TOP 100
-	CP.refcounts AS [Reference Count],
-	CP.usecounts AS [Use Count],
-	CP.size_in_bytes / 1024 AS [Size in KB],
-	CP.cacheobjtype AS [Cache Object Type],
-	CP.objtype AS [Object Type],
-	sql_text.text AS [Query],
-	query_plan.query_plan AS [Plan]
+	cp.refcounts AS [Reference Count],
+	cp.usecounts AS [Use Count],
+	cp.size_in_bytes / 1024 AS [Size in KB],
+	cp.cacheobjtype AS [Cache Object Type],
+	cp.objtype AS [Object Type],
+	st.text AS [Query],
+	qp.query_plan AS [Plan],
+	cp.plan_handle AS [Plan Handle]
 FROM
-	sys.dm_exec_cached_plans CP
+	sys.dm_exec_cached_plans cp
 OUTER APPLY
-	sys.dm_exec_sql_text(plan_handle) AS sql_text
+	sys.dm_exec_sql_text(plan_handle) AS st
 OUTER APPLY
-	sys.dm_exec_query_plan(plan_handle) AS query_plan
+	sys.dm_exec_query_plan(plan_handle) AS qp
 ORDER BY
 	CP.usecounts DESC

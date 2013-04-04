@@ -20,24 +20,21 @@ WITH TMP AS
 		SUM(s.execution_count) AS [Total Execution Count],
 		SUM(s.total_worker_time) / SUM(s.execution_count) AS [CPU Time Per Execution in MS],
 		COUNT(1) AS [Number of Statements],
-		s.plan_handle
+		s.plan_handle AS [Plan Handle]
 	FROM
 		sys.dm_exec_query_stats s
 	GROUP BY
 		s.plan_handle
 )
 SELECT
-	[Total CPU Time in MS],
-	[Total Execution Count],
-	[CPU Time Per Execution in MS],
-	[Number of Statements],
-	sql_text.text AS [Query],
-	q.query_plan AS [Plan]
+	TMP.*,
+	st.text AS [Query],
+	qp.query_plan AS [Plan]
 FROM
 	TMP
 OUTER APPLY
-	sys.dm_exec_query_plan(TMP.plan_handle) AS q
+	sys.dm_exec_query_plan(TMP.[Plan Handle]) AS qp
 OUTER APPLY
-	sys.dm_exec_sql_text(plan_handle) AS sql_text
+	sys.dm_exec_sql_text(TMP.[Plan Handle]) AS st
 ORDER BY
 	TMP.[Total CPU Time in MS] DESC
