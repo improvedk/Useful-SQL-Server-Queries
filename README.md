@@ -9,4 +9,4 @@ Some scripts are made wholly by me, while some are inspired by others - in which
 Contribution
 ============
 
-If you have an awesome script you think belongs here, please either send me a pull request or get in touch with me at mark@improve.dk
+If you have an awesome script you think belongs here, please either send me a pull request or get in touch with me at mark@improve.dk.
