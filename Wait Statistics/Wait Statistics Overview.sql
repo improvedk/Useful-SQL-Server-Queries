@@ -45,14 +45,7 @@
 		CAST([Wait Time in S] / [Count] * 1000 AS DECIMAL(14, 2)) AS [Avg Wait in MS],
 		CAST([Resource Wait Time in S] / [Count] * 1000 AS DECIMAL(14, 2)) AS [Avg Resource Waint in MS],
 		CAST([Signal Wait Time in S] / [Count] * 1000 AS DECIMAL(14, 2)) AS [Avg Signal Wait in MS],
-		[Count],
-		[Signal Wait Time in S] / ([Wait Time in S] + 0.000001) AS X,
-		CASE
-			WHEN [Resource Wait Time in S] > [Signal Wait Time in S] THEN
-				'IO'
-			ELSE
-				'CPU'
-		END AS [Wait Resource Type]
+		[Count]
 	FROM
 		TMP
 )
