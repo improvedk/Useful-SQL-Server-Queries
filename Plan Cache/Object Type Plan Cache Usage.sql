@@ -10,14 +10,14 @@
  ********************************************************************************/
  
 SELECT
+	p.objtype AS [Object Type],
 	COUNT(*) AS [Number of Plans],
-	SUM(CAST(size_in_bytes AS bigint)) / 1024 / 1024 AS [Size in MB],
-	cacheobjtype [Cache Object Type],
-	objtype AS [Object Type]
+	CAST(SUM(CAST(p.size_in_bytes AS FLOAT)) / 1024 / 1024 AS DECIMAL(10, 2)) AS [Size in MB],
+	SUM(CASE p.usecounts WHEN 1 THEN 1 ELSE 0 END) AS [Number of Plans (Usecount = 1)],
+	CAST(CAST(SUM(CASE p.usecounts WHEN 1 THEN p.size_in_bytes ELSE 0 END) AS FLOAT) / 1024 / 1024 AS DECIMAL(10, 2)) AS [Size in MB (Usecount = 1)]
 FROM
-	sys.dm_exec_cached_plans
+	sys.dm_exec_cached_plans p
 GROUP BY
-	cacheobjtype,
-	objtype
+	p.objtype
 ORDER BY
-	SUM(CAST(size_in_bytes AS bigint)) DESC
+	SUM(CAST(p.size_in_bytes AS bigint)) DESC
