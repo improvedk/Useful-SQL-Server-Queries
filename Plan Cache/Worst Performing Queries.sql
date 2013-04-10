@@ -36,7 +36,7 @@ WITH TMP AS
 		sys.dm_exec_query_stats s
 		
 	-- Most CPU consuming
-	GROUP BY s.plan_handle ORDER BY SUM(s.total_worker_time) DESC
+	--GROUP BY s.plan_handle ORDER BY SUM(s.total_worker_time) DESC
 		
 	-- Most read+write IO consuming
 	--GROUP BY s.plan_handle ORDER BY SUM(s.total_logical_reads + s.total_logical_writes) DESC
