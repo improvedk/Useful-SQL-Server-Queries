@@ -1,17 +1,17 @@
-/********************************************************************************
- Title:         Overall CPU Usage per Database
- Created by:    Mark S. Rasmussen <mark@improve.dk>
- License:       CC BY 3.0
- Attribution:   Inspired by Glenn Berry's DMV scripts
-                (http://sqlserverperformance.wordpress.com/tag/dmv-queries/)
- Requirements:  2005+
- 
- Usage:
- Outputs an overview of how much CPU time each database has spent since the last
- DBCC FREEPROCCACHE / restart.
- ********************************************************************************/
- 
- WITH DatabaseUsage AS
+/*
+	Title:         Overall CPU Usage per Database
+	Created by:    Mark S. Rasmussen <mark@improve.dk>
+	License:       CC BY 3.0
+	Attribution:   Inspired by Glenn Berry's DMV scripts
+	               (http://sqlserverperformance.wordpress.com/tag/dmv-queries/)
+	Requirements:  2005+
+
+	Usage:
+	Outputs an overview of how much CPU time each database has spent since the last
+	DBCC FREEPROCCACHE / restart.
+*/
+
+WITH DatabaseUsage AS
 (
 	SELECT
 		DB_Name(PA.DatabaseID) AS [Database Name],
