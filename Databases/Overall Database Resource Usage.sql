@@ -16,7 +16,7 @@ WITH DatabaseUsage AS
 	SELECT
 		DB_Name(PA.DatabaseID) AS [Database Name],
 		SUM(total_worker_time) AS [CPU Time (ms)],
-		(SUM(IO.num_of_bytes_read) + SUM(IO.num_of_bytes_written)) / 1024 / 1024 AS [IO (mb)]
+		(SUM(IO.num_of_bytes_read + IO.num_of_bytes_written)) / 1024 / 1024 AS [IO (mb)]
 	FROM
 		sys.dm_exec_query_stats AS QS
 	CROSS APPLY
