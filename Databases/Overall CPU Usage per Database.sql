@@ -16,9 +16,9 @@ WITH DatabaseUsage AS
 	SELECT
 		DB_Name(PA.DatabaseID) AS [Database Name],
 		SUM(total_worker_time) AS [CPU Time (ms)]
-	 FROM
+	FROM
 		sys.dm_exec_query_stats AS qs
-	 CROSS APPLY
+	CROSS APPLY
 		(SELECT CAST(value AS int) AS DatabaseID FROM sys.dm_exec_plan_attributes(qs.plan_handle) WHERE attribute = 'dbid') AS PA
 	GROUP BY
 		DatabaseID
