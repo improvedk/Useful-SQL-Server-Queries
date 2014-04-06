@@ -13,6 +13,7 @@ SELECT
 	s.file_id AS [File ID],
 	f.type_desc AS [Type],
 	f.physical_name AS [Path],
+	f.is_percent_growth,
 	s.size_on_disk_bytes / 1024 / 1024 AS [Size in MB],
 	CAST(CAST(s.io_stall_read_ms AS FLOAT) / CAST(s.num_of_reads AS FLOAT) AS DECIMAL(10, 2)) AS [Read Latency in MS],
 	CAST(CAST(s.io_stall_write_ms AS FLOAT) / CAST(s.num_of_writes AS FLOAT) AS DECIMAL(10, 2)) AS [Write Latency in MS],
@@ -29,6 +30,3 @@ INNER JOIN
 ORDER BY
 	-- Overall most IOPS expensive
 	s.num_of_reads + s.num_of_writes DESC
-
-	-- Largest files
-	--s.size_on_disk_bytes DESC
