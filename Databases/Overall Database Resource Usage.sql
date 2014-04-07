@@ -7,14 +7,15 @@
 	Requirements:  2005+
 
 	Usage:
-	Outputs an overview of how much/IO resources database has spent since the last
-	DBCC FREEPROCCACHE / restart.
+	Outputs an overview of how many resources each database has spent since the last
+	DBCC FREEPROCCACHE / DROPCLEANBUFFERS / restart.
 */
 
 WITH DatabaseUsage AS
 (
+	-- Fetches IO & CPU stats
 	SELECT
-		DB_Name(PA.DatabaseID) AS [Database Name],
+		PA.DatabaseID,
 		SUM(total_worker_time) AS [CPU Time (ms)],
 		(SUM(IO.num_of_bytes_read + IO.num_of_bytes_written)) / 1024 / 1024 AS [IO (mb)]
 	FROM
@@ -25,14 +26,36 @@ WITH DatabaseUsage AS
 		sys.dm_io_virtual_file_stats(NULL, NULL) AS IO ON IO.database_id = PA.DatabaseID
 	GROUP BY
 		DatabaseID
+),
+BPUsage AS
+(
+	SELECT
+		database_id AS DatabaseID,
+		CAST(COUNT(*) * 8/1024.0 AS DECIMAL (10,2))  AS [Buffer Pool (mb)]
+	FROM
+		sys.dm_os_buffer_descriptors WITH (NOLOCK)
+	WHERE
+		database_id > 4 AND -- system databases
+		database_id <> 32767 -- ResourceDB
+	GROUP BY
+		database_id
 )
 SELECT
-	*,
-	CAST([CPU Time (ms)] * 1.0 / SUM([CPU Time (ms)]) OVER() * 100.0 AS DECIMAL(5, 2)) AS [CPU Time (%)],
-	CAST([IO (mb)] * 1.0 / SUM([IO (mb)]) OVER() * 100.0 AS DECIMAL(5, 2)) AS [IO (%)]
+	D.name,
+	CAST([CPU Time (ms)] * 1.0 / SUM([CPU Time (ms)]) OVER() * 100.0 AS DECIMAL(5, 2)) AS [CPU (%)],
+	CAST([IO (mb)] * 1.0 / SUM([IO (mb)]) OVER() * 100.0 AS DECIMAL(5, 2)) AS [IO (%)],
+	CAST([Buffer Pool (mb)] * 1.0 / SUM([Buffer Pool (mb)]) OVER() * 100.0 AS DECIMAL(5, 2)) AS [Buffer Pool (%)],
+	[CPU Time (ms)],
+	[IO (mb)],
+	[Buffer Pool (mb)]
 FROM
-	DatabaseUsage
+	sys.databases D
+LEFT JOIN
+	DatabaseUsage U ON U.DatabaseID = D.database_id
+LEFT JOIN
+	BPUsage BP ON BP.DatabaseID = D.database_id
 ORDER BY
 	[CPU Time (ms)] DESC
 OPTION
 	(RECOMPILE)
+	select top 100 * from sys.dm_exec_cached_plans
