@@ -58,4 +58,3 @@ ORDER BY
 	[CPU Time (ms)] DESC
 OPTION
 	(RECOMPILE)
-	select top 100 * from sys.dm_exec_cached_plans
