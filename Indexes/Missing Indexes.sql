@@ -1,5 +1,4 @@
 /*
-	Title:       Query Optimizer Index Addition Suggestions
 	Created by:  Mark S. Rasmussen <mark@improve.dk>
 	License:     CC BY 3.0
 	
