@@ -15,6 +15,8 @@ WITH TMP AS (
 		user_seeks + user_scans + user_lookups as total_reads,
 		user_updates,
 		CASE
+			WHEN (user_seeks + user_scans + user_lookups = 0) THEN
+				'UNUSED'
 			WHEN (user_seeks + user_scans < user_updates) THEN
 				'UPDATES > READS'
 			WHEN (user_seeks < user_scans) THEN
