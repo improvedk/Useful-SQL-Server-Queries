@@ -10,7 +10,6 @@ SELECT DISTINCT TOP 50
 	d.statement AS table_name,
 	s.unique_compiles,
 	s.user_seeks,
-	s.user_scans,
 	s.last_user_seek,
 	s.avg_total_user_cost,
 	s.avg_user_impact,
