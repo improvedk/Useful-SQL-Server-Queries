@@ -6,6 +6,19 @@
  Usage:
  Returns a list of the most time consuming queries, server wide. Depending on what
  kind of queries you're looking for, you can uncomment the relevant predicates.
+ 
+ options can be used :  Most CPU consuming
+	    GROUP BY s.plan_handle ORDER BY SUM(s.total_worker_time) DESC
+		
+	    Most read+write IO consuming
+	    GROUP BY s.plan_handle ORDER BY SUM(s.total_logical_reads + s.total_logical_writes) DESC
+		
+	    Most write IO consuming
+	    GROUP BY s.plan_handle ORDER BY SUM(s.total_logical_writes) DESC
+		
+	    Most CLR consuming
+	    WHERE s.total_clr_time > 0 GROUP BY s.plan_handle ORDER BY SUM(s.total_clr_time) DESC
+	    
  ********************************************************************************/
 
 WITH TMP AS
@@ -35,17 +48,7 @@ WITH TMP AS
 	FROM
 		sys.dm_exec_query_stats s
 		
-	-- Most CPU consuming
-	--GROUP BY s.plan_handle ORDER BY SUM(s.total_worker_time) DESC
-		
-	-- Most read+write IO consuming
-	--GROUP BY s.plan_handle ORDER BY SUM(s.total_logical_reads + s.total_logical_writes) DESC
-		
-	-- Most write IO consuming
-	--GROUP BY s.plan_handle ORDER BY SUM(s.total_logical_writes) DESC
-		
-	-- Most CLR consuming
-	--WHERE s.total_clr_time > 0 GROUP BY s.plan_handle ORDER BY SUM(s.total_clr_time) DESC
+	
 )
 SELECT
 	TMP.*,
